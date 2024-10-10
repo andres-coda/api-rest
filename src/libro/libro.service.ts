@@ -19,7 +19,10 @@ export class LibroService {
 
     async getLibros(): Promise<Libro[]> {
         try {
-            const criterio: FindManyOptions = { relations: [ 'stock', 'profeMaterias.curso.escuela', 'materia','stock.estado','stock.especificaciones'] };
+            const criterio: FindManyOptions = { 
+                relations: [ 'stock', 'profeMaterias.curso.escuela', 'materia','stock.estado','stock.especificaciones'],
+                where:{ deleted:false}
+            };
             const libros: Libro[] = await this.libroRepository.find(criterio);
             if (libros) return libros;
             throw new NotFoundException(`No hay libros registrados en la base de datos`);
@@ -44,8 +47,10 @@ export class LibroService {
                     'profeMaterias.profesor', 
                     'materia'
                 ], 
-                where: { idLibro: id },
-                };
+                where: { 
+                    idLibro: id,
+                },
+            };
             const libro: Libro = queryRunner 
                 ? await queryRunner.manager.findOne(Libro, criterio)
                 : await this.libroRepository.findOne(criterio);
@@ -120,6 +125,7 @@ export class LibroService {
             throw new ConflictException('El libro ya fue borrado con anterioridad');
         }
         const rows: UpdateResult = await this.libroRepository.update({ idLibro: id }, { deleted: true });
+        this.libroGateway.enviarEliminarLibro(id);
         return rows.affected == 1;
     }
 

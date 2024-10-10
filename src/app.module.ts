@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ChatModule } from './chat/chat.module';
 import { AuthModule } from './auth/auth.module';
 import { CursoModule } from './curso/curso.module';
 import { EscuelaModule } from './escuela/escuela.module';
@@ -39,14 +38,11 @@ import { join } from 'path';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      ssl: false,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: false,
     }),
-    ChatModule,
     AuthModule,
     CursoModule,
     EscuelaModule,

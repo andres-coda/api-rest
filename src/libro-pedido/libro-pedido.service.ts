@@ -37,7 +37,10 @@ export class LibroPedidoService {
 
     async getLibrosPedidos(): Promise<LibroPedido[]> {
         try {
-            const criterio: FindManyOptions = { relations: ['libro', 'pedido', 'especificaciones', 'estadoPedido'] };
+            const criterio: FindManyOptions = { 
+                relations: ['libro', 'pedido', 'especificaciones', 'estadoPedido'],
+                where: {deleted: false}
+            };
             const librosPedidos: LibroPedido[] = await this.libroPedidoRepository.find(criterio);
             if (librosPedidos) return librosPedidos;
             throw new NotFoundException(`No hay libros pedidos registrados en la base de datos`);
@@ -67,6 +70,7 @@ export class LibroPedidoService {
             const criterio: FindManyOptions = {
                 relations:['pedido.cliente','libro','especificaciones', 'estadoPedido'],
                 where:{ 
+                    deleted:false,
                     estadoPedido: {
                         idEstadoPedido : estado.idEstadoPedido
                     }
@@ -94,7 +98,8 @@ export class LibroPedidoService {
                 .leftJoinAndSelect('pedido.cliente', 'cliente')
                 .leftJoinAndSelect('libroPedido.libro', 'libro')
                 .leftJoinAndSelect('libroPedido.especificaciones', 'especificaciones')
-                .leftJoinAndSelect('libroPedido.estadoPedido', 'estadoPedido');
+                .leftJoinAndSelect('libroPedido.estadoPedido', 'estadoPedido')
+                .where('libroPedido.deleted = false');
     
             // Aplicar filtros si hay estados proporcionados
             if (dtoEstado.length > 0) {
@@ -217,6 +222,7 @@ export class LibroPedidoService {
             throw new ConflictException('El libro pedido ya fue borrado con anterioridad');
         }
         const rows: UpdateResult = await this.libroPedidoRepository.update({ idLibroPedido: id }, { deleted: true });
+        this.libroPedidoGateway.enviarEliminarPedido(id);
         return rows.affected == 1;
     }
 

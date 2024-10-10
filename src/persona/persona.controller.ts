@@ -3,7 +3,6 @@ import { PersonaService } from './persona.service';
 import { Persona } from './entidad/persona.entity';
 import { DtoPersona } from './dto/personaDto.dto';
 import { AdminGuard } from 'src/auth/guard/admin.guard';
-import { NotFoundError } from 'rxjs';
 
 @Controller('persona')
 export class PersonaController {
@@ -38,7 +37,7 @@ export class PersonaController {
     @Delete(':id')
     @UseGuards(AdminGuard)
     async eliminarPersona(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number): Promise<Boolean> {
-      return await this.personaService.eliminarPersona(id);
+      return await this.personaService.softEliminarPersona(id);
     }
   
     @Patch(':id')

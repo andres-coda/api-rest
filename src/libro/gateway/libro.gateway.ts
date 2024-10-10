@@ -24,5 +24,9 @@ import { Libro } from '../entidad/libro.entity';
     enviarCrearLibro( data: Libro) {
       this.server.emit('Se creo libro', data); // Emite el evento 'cursoActualizado' a todos los clientes
     }
+
+    enviarEliminarLibro( id: number) {
+      this.server.emit('Se elimino libro', id); // Emite el evento 'cursoActualizado' a todos los clientes
+    }
   }
   

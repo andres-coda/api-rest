@@ -35,7 +35,7 @@ export class LibroController {
     @Delete(':id')
     @UseGuards(AdminGuard)
     async eliminarLibro(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number): Promise<Boolean> {
-        return await this.libroService.eliminarLibro(id);
+        return await this.libroService.softEliminarLibro(id);
     }
 
     @Patch(':id')

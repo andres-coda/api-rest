@@ -6,12 +6,14 @@ import { DtoPedido } from './dto/DtoPedido.dto';
 import { EstadoPedido } from 'src/estado-pedido/entidad/estadoPedido.entity';
 import { EstadoPedidoService } from 'src/estado-pedido/estado-pedido.service';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PedidoGateway } from './gateway/pedido.gateway';
 
 @Injectable()
 export class PedidoService {
     constructor(
         @InjectRepository(Pedido) private readonly pedidoRepository: Repository<Pedido>,
-        private estadoPedidoService:EstadoPedidoService
+        private estadoPedidoService:EstadoPedidoService,
+        private readonly pedidoGatewey : PedidoGateway,
     ) {}
 
     private asignarEstadoPedido(pedido:Pedido):DtoPedidoReturn{
@@ -32,6 +34,7 @@ export class PedidoService {
         try {
             const criterio: FindManyOptions = {
                 relations: ['cliente', 'librosPedidos.estadoPedido', 'librosPedidos.libro'],
+                where: {deleted: false}
             };
             const pedidos: Pedido[] = await this.pedidoRepository.find(criterio);    
             const nuevoPedidos: DtoPedidoReturn[] = pedidos.map(pedido => {
@@ -125,6 +128,7 @@ export class PedidoService {
             throw new ConflictException('El pedido ya fue borrado con anterioridad');
         }
         const rows: UpdateResult = await this.pedidoRepository.update({ idPedido: id }, { deleted: true });
+        this.pedidoGatewey.enviarEliminoPedido(id);
         return rows.affected == 1;
     }
 

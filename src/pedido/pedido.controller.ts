@@ -37,7 +37,7 @@ export class PedidoController {
     @Delete(':id')
     @UseGuards(AdminGuard)
     async eliminarPedido(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number): Promise<Boolean> {
-        return await this.pedidoService.eliminarPedido(id);
+        return await this.pedidoService.softEliminarPedido(id);
     }
 
     @Patch(':id')

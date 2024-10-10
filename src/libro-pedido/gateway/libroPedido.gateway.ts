@@ -26,5 +26,9 @@ import { Pedido } from 'src/pedido/entidad/pedido.entity';
     enviarCrearPedido(pedido : LibroPedido) {
       this.server.emit('Se creo libro pedido', pedido); // Emite el evento 'cursoActualizado' a todos los clientes
     }
+    
+    enviarEliminarPedido(id : number) {
+      this.server.emit('Se elimino libro pedido', id); // Emite el evento 'cursoActualizado' a todos los clientes
+    }
   }
   

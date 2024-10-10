@@ -1,7 +1,6 @@
 import {
     WebSocketGateway,
     WebSocketServer,
-    SubscribeMessage,
   } from '@nestjs/websockets';
   import { Server } from 'socket.io';
 import { Persona } from '../entidad/persona.entity';
@@ -21,6 +20,10 @@ import { Persona } from '../entidad/persona.entity';
 
     enviarCrearPersona(data:Persona){
       this.server.emit('Se creo persona', data);
+    }
+
+    enviarEliminarPersona(id:number){
+      this.server.emit('Se elimino persona', id);
     }
   }
   

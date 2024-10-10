@@ -17,6 +17,7 @@ export class PersonaService {
         try {
             const criterio: FindManyOptions = { 
                 relations: ['profeMaterias.curso', 'pedidos.librosPedidos.estadoPedido'],
+                where: {deleted: false},
                 order: {
                     pedidos: {
                         librosPedidos:{ 
@@ -54,7 +55,8 @@ export class PersonaService {
                 .leftJoinAndSelect('pedidos.librosPedidos', 'librosPedidos')
                 .leftJoinAndSelect('librosPedidos.estadoPedido', 'estadoPedido')
                 .leftJoinAndSelect('pedidos.estado', 'estado')
-                .where('pedidos.librosPedidos.estadoPedido.idEstadoPedido <= 4')
+                .where('persona.deleted = false')
+                .andWhere('pedidos.librosPedidos.estadoPedido.idEstadoPedido <= 4')
                 .orWhere(qb => {
                     const subQuery = qb.subQuery()
                         .select('pedidos.idPedido')
@@ -171,12 +173,17 @@ export class PersonaService {
     }
 
     async softEliminarPersona(id: number): Promise<Boolean> {
-        const personaExists: Persona = await this.getPersonaById(id);
-        if (personaExists.deleted) {
-            throw new ConflictException('La persona ya fue borrada con anterioridad');
+        try {
+            const personaExists: Persona = await this.getPersonaById(id);
+            if (personaExists.deleted) {
+                throw new ConflictException('La persona ya fue borrada con anterioridad');
+            }
+            const rows: UpdateResult = await this.personaRepository.update({ idPersona: id }, { deleted: true });
+            this.personaGateway.enviarEliminarPersona(id);
+            return rows.affected == 1;
+        } catch (error) {
+            throw this.handleExceptions(error, `Error al intentar eliminar la persona con id ${id}`);
         }
-        const rows: UpdateResult = await this.personaRepository.update({ idPersona: id }, { deleted: true });
-        return rows.affected == 1;
     }
 
     async softReactivarPersona(id: number): Promise<Boolean> {

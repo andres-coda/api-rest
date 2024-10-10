@@ -45,3 +45,31 @@ DB_PORT=3306
 DB_USERNAME=root
 DB_PASSWORD=root
 DB_NAME=deliberycopydos
+
+
+google cloud
+
+DB_HOST=34.176.155.200
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=deliberycopy1
+DB_NAME=deliberycopy
+
+
+dataweb
+
+DB_HOST=vps-4440234-x.dattaweb.com
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=maFIfi09pa
+DB_NAME=deliverycopy
+
+
+shh dataweb
+
+DB_HOST=200.58.105.74
+DB_PORT=5105
+DB_USERNAME=root
+DB_PASSWORD=mUdwe2ymP59a
+DB_NAME=deliverycopy
+
