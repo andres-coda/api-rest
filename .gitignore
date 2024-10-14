@@ -58,3 +58,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # docker
 api-rest-v2.tar
 api-rest-v1.tar
+
+#txt
+instruccionesTerminal.txt
+claves.txt

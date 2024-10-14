@@ -83,8 +83,7 @@ export class LibroPedidoService {
             }
 
             const listaPedidoLibros:LibroPedido[]= await this.libroPedidoRepository.find(criterio);
-            if (listaPedidoLibros) return listaPedidoLibros;
-            throw new NotFoundException(`No se encontraron los libros con las especificaciiones dadas`);
+            return listaPedidoLibros;
         } catch(error){
             throw this.handleExceptions(error, `Error al intentar buscar los libros pedido por estado: ${dtoEstado}`);
         }
@@ -125,11 +124,8 @@ export class LibroPedidoService {
             // Ejecutar la consulta y obtener los resultados
             const listaPedidoLibros: LibroPedido[] = await query.getMany();
     
-            // Verificar si se encontraron resultados
-            if (listaPedidoLibros.length > 0) return listaPedidoLibros;
-    
-            // Lanzar excepción si no se encontraron resultados
-            throw new NotFoundException(`No se encontraron los libros con las especificaciones y estados dados`);
+            return listaPedidoLibros;
+
         } catch (error) {
             throw this.handleExceptions(error, `Error al intentar buscar los libros pedido por estado: ${dtoEstado}`);
         }
